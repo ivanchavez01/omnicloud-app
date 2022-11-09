@@ -1,29 +1,19 @@
-# omnicloud-app
+# Frontend
+[![Node.js CI](https://github.com/ivanchavez01/omnicloud-app/actions/workflows/build.yml/badge.svg)](https://github.com/ivanchavez01/omnicloud-app/actions/workflows/build.yml)
+### Requerimientos
+* Node 14.x
+* Windows, Linux
 
-## Project setup
-```
-npm install
-```
+## Instalación
+`git clone git@github.com:ivanchavez01/omnicloud-app.git`
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Instalación de dependencias
+`npm install`
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Hot-Reload
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+`npm run serve`
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Construir para producción
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+`npm run build`

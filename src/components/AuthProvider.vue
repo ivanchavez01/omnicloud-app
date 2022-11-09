@@ -11,17 +11,22 @@
 
 <script>
 import LoginForm from "@/components/LoginForm";
+import { mapActions } from "vuex";
+
 export default {
   name: "AuthProvider",
   components: { LoginForm },
-  data: () => ({
-    hasSession: false,
-  }),
-  methods: {
-    loginSuccessHandler() {
-      this.hasSession = true;
+  computed: {
+    hasSession() {
+      return this.$store.state.auth !== null;
     },
-    loginErrorHandler(ev) {
+  },
+  methods: {
+    ...mapActions(["login"]),
+    loginSuccessHandler(ev) {
+      this.login(ev);
+    },
+    loginErrorHandler() {
       alert("Hubo un error al iniciar sesión");
     },
   },

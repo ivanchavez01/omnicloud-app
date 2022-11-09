@@ -1,29 +1,19 @@
 <template>
   <v-container>
     <v-row>
-      <v-col md="8">
-        <v-card>
-          <v-card-title>Libros</v-card-title>
-
-          <v-list-item three-line v-for="book in books" :key="book.id">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ book.title }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                Editorial: {{ book.editorial.name }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle>
-                Autores:
-                {{
-                  book.authors.map((a) => `${a.name} ${a.lastName}`).join(", ")
-                }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card>
+      <v-col md="12">
+        <book-searcher @search="searchHandler"></book-searcher>
       </v-col>
-      <v-col md="4"></v-col>
+      <v-col md="5">
+        <book-list
+          :search.sync="search"
+          :books="books"
+          @onSelected="bookSelectorHandler"
+        ></book-list>
+      </v-col>
+      <v-col md="7">
+        <book-details :book="bookSelected"></book-details>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -32,38 +22,40 @@
 import axios from "axios";
 import Component from "vue-class-component";
 import Vue from "vue";
+import BookList from "@/components/Home/BooksList.vue";
+import BookDetails from "@/components/Home/BookDetails.vue";
+import BookSearcher from "@/components/Home/BookSearcher.vue";
+import { BookDto } from "@/source/Book";
 
-@Component
+@Component({
+  components: { BookSearcher, BookDetails, BookList },
+})
 export default class HomeView extends Vue {
   name = "HomeView";
   books: BookDto[] = [];
+  bookSelected: BookDto | null = null;
+  search = "";
 
   async mounted() {
-    const { data } = await axios.get(`http://localhost:8001/api/book`);
+    const { data } = await axios.get(
+      `${process.env.VUE_APP_API_HOST}/api/book`,
+      {
+        auth: {
+          username: process.env.VUE_APP_API_USERNAME,
+          password: process.env.VUE_APP_API_PASSWORD,
+        },
+      }
+    );
     this.books = data;
   }
-}
 
-interface BookDto {
-  id: number;
-  title: string;
-  publishedAt: Date;
-  price: number;
-  editorial: EditorialDto;
-  authors: Author[];
-}
+  searchHandler(ev: string) {
+    this.search = ev;
+  }
 
-interface EditorialDto {
-  id: number;
-  name: string;
-  phoneNumber: string;
-}
-
-interface Author {
-  id: number;
-  name: string;
-  lastName: string;
-  email: string;
+  bookSelectorHandler(book: BookDto) {
+    this.bookSelected = book;
+  }
 }
 </script>
 

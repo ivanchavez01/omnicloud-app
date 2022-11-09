@@ -1,37 +1,51 @@
 <template>
   <v-app>
-    <auth-provider>
-      <v-app-bar app color="primary" dark>
+    <auth-provider ref="authProvider">
+      <v-app-bar app color="primary" dark v-if="auth !== null">
         <div class="d-flex align-center">
           <v-img
-            alt="Vuetify Logo"
+            alt="Omnicloud Logo Icon"
             class="shrink mr-2"
             contain
-            src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+            src="/img/icon-logo.png"
             transition="scale-transition"
             width="40"
           />
 
           <v-img
-            alt="Vuetify Name"
+            alt="Omnicloud Logo Text"
             class="shrink mt-1 hidden-sm-and-down"
             contain
             min-width="100"
-            src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+            src="/img/omnicloud-logo-letters.png"
             width="100"
           />
         </div>
 
         <v-spacer></v-spacer>
 
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
-          <span class="mr-2">Latest Release</span>
-          <v-icon>mdi-open-in-new</v-icon>
-        </v-btn>
+        <v-menu open-on-hover bottom left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" text>
+              <span class="mr-2">{{ auth.name }}</span>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item>
+              <v-list-item-avatar>
+                <img
+                  src="https://cdn.vuetifyjs.com/images/john.jpg"
+                  alt="John"
+                />
+              </v-list-item-avatar>
+              <v-list-item-title>{{ auth.email }}</v-list-item-title>
+            </v-list-item>
+            <v-divider></v-divider>
+            <v-list-item @click="_signOut">
+              <v-list-item-title>Cerrar sesión</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-app-bar>
 
       <v-main>
@@ -44,12 +58,19 @@
 <script lang="ts">
 import Vue from "vue";
 import AuthProvider from "@/components/AuthProvider.vue";
+import { mapActions, mapState } from "vuex";
 
 export default Vue.extend({
   name: "App",
   components: { AuthProvider },
-  data: () => ({
-    //
-  }),
+  computed: {
+    ...mapState(["auth"]),
+  },
+  methods: {
+    ...mapActions(["signOut"]),
+    _signOut() {
+      this.signOut();
+    },
+  },
 });
 </script>
